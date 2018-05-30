@@ -8,7 +8,8 @@ from keras.engine.topology import Layer
 import keras.layers
 import keras.utils.generic_utils as _kutils
 from keras import backend as K
-from keras.backend.tensorflow_backend import _initialize_variables
+# from keras.backend.tensorflow_backend import _initialize_variables
+_initialize_variables = tf.variables_initializer
 from .ops import similarity as _similarity
 from .ops.mex import _mex_dims_helper, mex as _mex, _expand_dim_specification
 from .unsupervised import similarity_unsupervised_init as _similarity_unsupervised_init
