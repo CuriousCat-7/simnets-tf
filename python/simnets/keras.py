@@ -9,13 +9,25 @@ import keras.layers
 import keras.utils.generic_utils as _kutils
 from keras import backend as K
 # from keras.backend.tensorflow_backend import _initialize_variables
-_initialize_variables = tf.variables_initializer
+from keras.backend import get_session
 from .ops import similarity as _similarity
 from .ops.mex import _mex_dims_helper, mex as _mex, _expand_dim_specification
 from .unsupervised import similarity_unsupervised_init as _similarity_unsupervised_init
 from .unsupervised.pca import pca_unsupervised_init as _pca_unsupervised_init
 from keras.utils.generic_utils import get_custom_objects as _get_custom_objects
 
+def _initialize_variables():
+    """Utility to initialize uninitialized variables on the fly.
+    """
+    variables = tf.global_variables()
+    uninitialized_variables = []
+    for v in variables:
+        if not hasattr(v, '_keras_initialized') or not v._keras_initialized:
+            uninitialized_variables.append(v)
+            v._keras_initialized = True
+    if uninitialized_variables:
+        sess = get_session()
+        sess.run(tf.variables_initializer(uninitialized_variables))
 
 class Similarity(Layer):
 
