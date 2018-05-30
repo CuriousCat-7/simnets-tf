@@ -40,7 +40,7 @@ def kmeans_unsupervised_init(sim_op, templates_var, weights_var):
         strides = [1, strides[0], strides[1], 1]
         blocks = [1, blocks[0], blocks[1], 1]
         patches = tf.extract_image_patches(tf.transpose(input_tensor, (0, 2, 3, 1)), strides=strides,
-                                           blocks=blocks, rates=[1, 1, 1, 1], padding='VALID')
+                                           ksizes=blocks, rates=[1, 1, 1, 1], padding='VALID')
         _, _, _, ppatch = patches.get_shape().as_list()
         patches = tf.reshape(patches, [-1, ppatch])
         kmeans = KMeans(patches, ninstances, use_mini_batch=True, initial_clusters='kmeans_plus_plus')
