@@ -30,7 +30,7 @@ To build the project type the following commands:<BR/>
  cd simnets-tf
  mkdir build
  cd build
- cmake .. -DCMAKE_BUILD_TYPE=Release -DSIMNETS_PYTHON_VERSION=2.7 -DCMAKE_INSTALL_PREFIX=install
+ cmake .. -DCMAKE_BUILD_TYPE=Release -DSIMNETS_PYTHON_VERSION=2.7 -DCMAKE_INSTALL_PREFIX=install -DPYTHON_EXECUTABLE=$(which python)
  make -j simnet_ops
  ```
  
@@ -40,7 +40,7 @@ To build the project type the following commands:<BR/>
   cd simnets-tf
   mkdir build
   cd build
-  cmake .. -DCMAKE_BUILD_TYPE=Release -DSIMNETS_PYTHON_VERSION=3.5 -DCMAKE_INSTALL_PREFIX=install
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DSIMNETS_PYTHON_VERSION=3.5 -DCMAKE_INSTALL_PREFIX=install -DPYTHON_EXECUTABLE=$(which python)
   make -j simnet_ops
   ```
  To test the code you can now type:
