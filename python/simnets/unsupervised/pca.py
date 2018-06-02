@@ -32,7 +32,7 @@ class _RunningAverage(object):
         return self.m
 
 
-def pca_unsupervised_init(conv_op, ):
+def pca_unsupervised_init(conv_op, filters_var ):
     """Initialize a convolutional layer using pca unsupervised learning
 
     Initializes the filters as the first k eigen vectors of the data covariance.
