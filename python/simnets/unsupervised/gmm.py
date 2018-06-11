@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow.contrib.factorization import gmm as _gmm
+import pdb
 
 
 def gmm_unsupervised_init(sim_op, templates_var, weights_var):
@@ -42,7 +43,7 @@ def gmm_unsupervised_init(sim_op, templates_var, weights_var):
                                            ksizes=blocks, rates=[1, 1, 1, 1], padding='VALID')
         _, _, _, patch_size = patches.get_shape().as_list()
         patches = tf.reshape(patches, [-1, patch_size])
-        _, _, _, training_op, _, _ = _gmm(inp=patches, initial_clusters='random',
+        _, _, _, training_op, init_op, _ = _gmm(inp=patches, initial_clusters='random',
                                     random_seed=33, num_clusters=num_instances, covariance_type='diag', params='mc')
         clusters_var = [v for v in tf.global_variables() if v.name == name + '/' + 'clusters:0'][0]
         clusters = clusters_var.op.outputs[0]
@@ -61,6 +62,7 @@ def gmm_unsupervised_init(sim_op, templates_var, weights_var):
         initializer = tf.group(*[v.initializer for v in gmm_vars])
 
         channels, block_rows, block_cols = templates_tensor.get_shape().as_list()[1:]
+        pdb.set_trace()
         reshaped_clusters = tf.reshape(clusters, (num_instances, block_rows, block_cols, channels))
         reshaped_covs = tf.reshape(clusters_covs, (num_instances, block_rows, block_cols, channels))
         transposed_clusters = tf.transpose(reshaped_clusters, [0, 3, 1, 2])
@@ -68,5 +70,6 @@ def gmm_unsupervised_init(sim_op, templates_var, weights_var):
         with tf.control_dependencies([training_op]):
             assign1 = tf.assign(templates_var, transposed_clusters)
             assign2 = tf.assign(weights_var, transposed_covs)
-        return initializer, tf.group(assign1, assign2, name='gmm_init_assign')
+        #return initializer, tf.group(assign1, assign2, name='gmm_init_assign')
+        return init_op, tf.group(assign1, assign2, name='gmm_init_assign')
 

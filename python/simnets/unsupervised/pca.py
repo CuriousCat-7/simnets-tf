@@ -85,13 +85,15 @@ def pca_unsupervised_init(conv_op, filters_var ):
                                                     tf.expand_dims(mu_manager.value(), 0))
             s, u, v = tf.svd(cov)
             pca = v[:, :ninstances]
+            import pdb
+            pdb.set_trace()
             pca_for_filters = tf.reshape(pca, filters_var.get_shape().as_list())
             assign_op = tf.assign(filters_var, pca_for_filters)
             return update_op, assign_op
 
 if __name__ == '__main__':
-    vals = tf.placeholder(tf.float32, [3,200,100,2])
-    filters = tf.get_variable('filts', shape=[3, 3, 2, 4])
+    vals = tf.placeholder(tf.float32, [3,200,100,1])
+    filters = tf.get_variable('filts', shape=[3, 3, 1, 32])
     conv = tf.nn.conv2d(vals, filters, strides=[1,2,2,1], padding='VALID')
     conv2 = tf.nn.conv2d(vals, filters, strides=[1,2,2,1], padding='VALID')
     update_op, assign_op = pca_unsupervised_init(conv, filters)
@@ -100,5 +102,5 @@ if __name__ == '__main__':
     sess.run(tf.global_variables_initializer())
     import numpy as np
     for i in range(30):
-        sess.run(update_op, feed_dict={vals: np.random.normal(3.0, size=[3,200,100,2])})
+        sess.run(update_op, feed_dict={vals: np.random.normal(3.0, size=[3,200,100,1])})
     sess.run(assign_op)
